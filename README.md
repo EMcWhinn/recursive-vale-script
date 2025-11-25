@@ -15,7 +15,7 @@ This script runs the Vale linter on a specified `master.adoc` file and recursive
    **Example (Linux/macOS):**
 
 ```
-mkdir -p ~/Scripts
+mkdir -p ~/Scripts
 touch ~/Scripts/recursive-vale-script
 # Open the file and paste the following script content:
 ```
@@ -23,7 +23,7 @@ touch ~/Scripts/recursive-vale-script
 2. **Script content (`recursive-vale-script`):**
 
 ```
-#!/bin/bash
+#!/bin/bash
 
 # Function to find include files in a source file and run vale on them.
 check_includes() {
@@ -82,13 +82,13 @@ chmod +x ~/Scripts/recursive-vale-script
    **Example syntax:**
 
 ```
-<PATH_TO_SCRIPT>/recursive-vale-script <MASTER_FILE_NAME>
+<PATH_TO_SCRIPT>/recursive-vale-script <MASTER_FILE_NAME>
 ```
 
    **Example (Linux/macOS):**
 
 ```
-Linux: /home/emcwhinn/Scripts/recursive-vale-script master.adoc
+Linux: /home/emcwhinn/Scripts/recursive-vale-script master.adoc
 mac/OS: /Users/sayee/Scripts/recursive-vale-script master.adoc
 ```
 
@@ -105,7 +105,7 @@ code ~/.bashrc
 2. Add a line that points to the script's full path. For example, using the alias `vs` (Vale script):
 
 ```
-Linux: alias vs='/home/emcwhinn/Scripts/recursive-vale-script master.adoc'
+Linux: alias vs='/home/emcwhinn/Scripts/recursive-vale-script master.adoc'
 mac/OS: alias vs='/Users/sayee/Scripts/recursive-vale-script master.adoc'
 
 ```
@@ -113,7 +113,7 @@ mac/OS: alias vs='/Users/sayee/Scripts/recursive-vale-script master.adoc'
 3. Apply the new alias without restarting the terminal session:
 
 ```
-source ~/.bashrc
+source ~/.bashrc
 ```
 
    You can now run the check using only `vs` from your documentation directory.
