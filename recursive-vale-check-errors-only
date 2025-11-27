@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Function to find include files in a source file and run vale on them.
+check_includes() {
+    local source_file="$1"
+    local source_dir="$(dirname "$source_file")"
+
+    # Filters for literal 'include::' paths, excluding attribute-based includes (which contain '{')
+    grep '^include::[^\{]*$' "$source_file" | \
+    awk -F'::|\\[' '{print $2}' | \
+    while read included_path; do
+        # Construct the absolute path
+        local full_path="$source_dir/$included_path"
+
+        # Check if the file exists and is not an attributes file
+        if [[ -f "$full_path" && "$included_path" != *"attributes"* ]]; then
+            echo "Linting: $full_path"
+            vale --minAlertLevel=warning "$full_path"
+            # Recursively check the included file
+            check_includes "$full_path"
+        fi
+    done
+}
+
+# Main execution logic
+if [[ -z "$1" ]]; then
+    echo "Usage: $0 <path/to/master.adoc>"
+    exit 1
+fi
+
+echo "--- Checking Master File: $1 ---"
+vale --minAlertLevel=warning "$1"
+
+# Begin the recursive check
+check_includes "$1"
+
+echo "--- Recursive Check Complete ---"

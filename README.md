@@ -1,28 +1,29 @@
-# Recursive Vale check script
+# Recursive Vale Check Script
 
 This script runs the Vale linter on a specified `master.adoc` file and recursively checks all included modules and snippets, ensuring full style coverage of the documentation source tree.
 
-### **Prerequisites**
+## Prerequisites
 
-* The [Vale command-line tool](https://vale.sh/docs/install) is installed and accessible in your system's `$PATH`.  
-* You have set up the necessary [Vale configuration](https://github.com/jhradilek/asciidoctor-dita-vale?tab=readme-ov-file#asciidocdita) (e.g., `.vale.ini`).  
-* The system has the standard Bash shell and core utilities (`grep`, `awk`, `dirname`).
+- The [Vale command-line tool](https://vale.sh/docs/install) is installed and accessible in your system's `$PATH`
+- You have set up the necessary [Vale configuration](https://github.com/jhradilek/asciidoctor-dita-vale?tab=readme-ov-file#asciidocdita) (e.g., `.vale.ini`)
+- The system has the standard Bash shell and core utilities (`grep`, `awk`, `dirname`)
 
-### **Procedure**
+## Installation
 
-1. Create the script file in a dedicated location , such as `<SCRIPTS_DIR>`.
+### 1. Create the Script File
 
-   **Example (Linux/macOS):**
+Create the script file in a dedicated location, such as `~/Scripts`:
 
-```
+```bash
 mkdir -p ~/Scripts
-touch ~/Scripts/recursive-vale-script
-# Open the file and paste the following script content:
+touch ~/Scripts/recursive-vale-check
 ```
 
-2. **Script content (`recursive-vale-script`):**
+### 2. Add the Script Content
 
-```
+Open the file and add the following content:
+
+```bash
 #!/bin/bash
 
 # Function to find include files in a source file and run vale on them.
@@ -62,65 +63,71 @@ check_includes "$1"
 echo "--- Recursive Check Complete ---"
 ```
 
-**IMPORTANT**  
-For larger files, the CLI might truncate the content so you miss the first assemblies and modules. In order to view just Vale **warnings** and **errors** without suggestions see the [updated script example](#bookmark=id.vgud15gygkra).
+> **Note:** For larger files, the CLI might truncate the content so you miss the first assemblies and modules. To view only Vale warnings and errors without suggestions, see the [alternative script version](#warnings-and-errors-only-version) below.
 
-3. Grant executable permissions:
+### 3. Make the Script Executable
 
-```
-chmod +x ~/Scripts/recursive-vale-script
-```
-
-   
-
-   **NOTE:** 
-
-   Executable permission is required to run the file directly as a command.
-
-4. Run the script from the directory containing your `master.adoc` file, using the full path to the script.
-
-   **Example syntax:**
-
-```
-<PATH_TO_SCRIPT>/recursive-vale-script <MASTER_FILE_NAME>
+```bash
+chmod +x ~/Scripts/recursive-vale-check
 ```
 
-   **Example (Linux/macOS):**
+## Usage
 
-```
-Linux: /home/emcwhinn/Scripts/recursive-vale-script master.adoc
-mac/OS: /Users/sayee/Scripts/recursive-vale-script master.adoc
-```
+Run the script from the directory containing your `master.adoc` file:
 
-### **Optional: Create a Shell alias**
-
-To simplify execution, define an alias in your shell configuration file (`~/.bashrc`, or `~/.zshrc`)
-
-1. **Open the configuration file:**
-
-```
-code ~/.bashrc
+```bash
+~/Scripts/recursive-vale-check master.adoc
 ```
 
-2. Add a line that points to the script's full path. For example, using the alias `vs` (Vale script):
+Or with the full path:
 
+```bash
+# Linux
+/home/username/Scripts/recursive-vale-check master.adoc
+
+# macOS
+/Users/username/Scripts/recursive-vale-check master.adoc
 ```
-Linux: alias vs='/home/emcwhinn/Scripts/recursive-vale-script master.adoc'
-mac/OS: alias vs='/Users/sayee/Scripts/recursive-vale-script master.adoc'
 
+## Optional: Create a Shell Alias
+
+To simplify execution, define an alias in your shell configuration file (`~/.bashrc` or `~/.zshrc`):
+
+### 1. Open the Configuration File
+
+```bash
+# For bash
+vim ~/.bashrc
+
+# For zsh
+vim ~/.zshrc
 ```
 
-3. Apply the new alias without restarting the terminal session:
+### 2. Add the Alias
 
+Add a line that points to the script's full path. For example, using the alias `vale-check`:
+
+```bash
+alias vale-check='~/Scripts/recursive-vale-check'
 ```
+
+### 3. Apply the Changes
+
+```bash
+# For bash
 source ~/.bashrc
+
+# For zsh
+source ~/.zshrc
 ```
 
-   You can now run the check using only `vs` from your documentation directory.
+You can now run the check using only `vale-check master.adoc` from your documentation directory.
 
-### **Optional: Script for larger files and viewing Vale errors and warnings only** 
+## Warnings and Errors Only Version
 
-```
+For larger files or to reduce output, use this version that shows only warnings and errors (no suggestions):
+
+```bash
 #!/bin/bash
 
 # Function to find include files in a source file and run vale on them.
@@ -160,16 +167,32 @@ check_includes "$1"
 echo "--- Recursive Check Complete ---"
 ```
 
-### **Script logic and output**
+## How It Works
 
 The script performs the following actions:
 
-1. Initial Check: Runs `vale` on `master.adoc`.  
-2. Recursive Search: Calls `check_includes master.adoc`.  
-   * It uses `grep '^include::[^\{]*$'` to find all literal includes, filtering out any includes that use AsciiDoc attributes (which start with an `{`).  
-   * It uses `awk` to cleanly extract the file path from the `include::path/to/file.adoc[]` syntax.  
-   * For each found file, it runs `vale "$full_path"`.  
-   * It then **recursively** calls `check_includes "$full_path"`, ensuring it descends through all levels of inclusion.  
-3. **Completion:** Prints `--- Recursive Check Complete ---`.  
-     
-   
+1. **Initial Check:** Runs `vale` on the specified master file (e.g., `master.adoc`)
+
+2. **Recursive Search:** Calls the `check_includes` function which:
+   - Uses `grep '^include::[^\{]*$'` to find all literal includes, filtering out any includes that use AsciiDoc attributes (which contain `{`)
+   - Uses `awk` to cleanly extract the file path from the `include::path/to/file.adoc[]` syntax
+   - For each found file, runs `vale "$full_path"`
+   - Recursively calls `check_includes "$full_path"`, ensuring it descends through all levels of inclusion
+
+3. **Completion:** Prints `--- Recursive Check Complete ---` when finished
+
+## Features
+
+- Recursively lints all included AsciiDoc files
+- Automatically skips attribute files
+- Filters out attribute-based includes (e.g., `{variable}`)
+- Supports both full output and warnings/errors-only modes
+- Works with nested include hierarchies
+
+## License
+
+MIT License - See LICENSE file for details
+
+## Contributing
+
+Feel free to open issues or submit pull requests to improve this script.
