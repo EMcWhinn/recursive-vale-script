@@ -10,7 +10,32 @@ This script runs the Vale linter on a specified `master.adoc` file and recursive
 
 ## Installation
 
-### 1. Create the Script File
+### Method 1: Clone the Repository (Recommended)
+
+Clone this repository to get the latest version and easily pull updates:
+
+```bash
+# Clone the repository
+git clone https://github.com/emcwhinn/recursive-vale-check.git ~/Scripts/recursive-vale-check-repo
+
+# Create a symbolic link to the script
+ln -s ~/Scripts/recursive-vale-check-repo/recursive-vale-check ~/Scripts/recursive-vale-check
+
+# Make the script executable
+chmod +x ~/Scripts/recursive-vale-check-repo/recursive-vale-check
+```
+
+To update the script in the future, simply run:
+
+```bash
+cd ~/Scripts/recursive-vale-check-repo && git pull
+```
+
+### Method 2: Manual Installation (Alternative)
+
+If you prefer not to clone the repository, you can manually create the script:
+
+#### 1. Create the Script File
 
 Create the script file in a dedicated location, such as `~/Scripts`:
 
@@ -19,7 +44,7 @@ mkdir -p ~/Scripts
 touch ~/Scripts/recursive-vale-check
 ```
 
-### 2. Add the Script Content
+#### 2. Add the Script Content
 
 Open the file and add the following content:
 
@@ -65,7 +90,7 @@ echo "--- Recursive Check Complete ---"
 
 > **Note:** For larger files, the CLI might truncate the content so you miss the first assemblies and modules. To view only Vale warnings and errors without suggestions, see the [alternative script version](#warnings-and-errors-only-version) below.
 
-### 3. Make the Script Executable
+#### 3. Make the Script Executable
 
 ```bash
 chmod +x ~/Scripts/recursive-vale-check
