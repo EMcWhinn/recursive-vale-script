@@ -16,7 +16,7 @@ Clone this repository to get the latest version and easily pull updates:
 
 ```bash
 # Clone the repository
-git clone https://github.com/emcwhinn/recursive-vale-check.git ~/Scripts/recursive-vale-check-repo
+git clone https://github.com/EMcWhinn/recursive-vale-script.git ~/Scripts/recursive-vale-check-repo
 
 # Create a symbolic link to the script
 ln -s ~/Scripts/recursive-vale-check-repo/recursive-vale-check ~/Scripts/recursive-vale-check
